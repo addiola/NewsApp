@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">News App</string>
+    <string name="news_activity_label">News</string>
+
+    <string name="empty_view">No Data Found</string>
+    <string name="no_internet">No internet Connection</string>
+
+    <string name="header_placeholder">Headline</string>
+    <string name="string_placeholder">Read more ....</string>
+
+    <string name="read_more">Read more ...</string>
+
+    <string name="business">Business</string>
+    <string name="politics">Politics</string>
+    <string name="world">World</string>
+
+
+</resources>
