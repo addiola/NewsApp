@@ -7,36 +7,35 @@
 
     <LinearLayout
         android:id="@+id/text_container"
-        android:background="@color/colorAccent"
-        android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_width="215dp"
         android:layout_height="150dp"
+        android:background="@color/colorAccent"
         android:orientation="vertical"
-        android:padding = "16dp">
+        android:padding="16dp">
 
 
         <TextView
             android:id="@+id/headline"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="95dp"
+            android:gravity="top"
             android:text="@string/string_placeholder"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:gravity="top"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
 
         <TextView
             android:id="@+id/link_to_news_page"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/string_placeholder"
-            android:gravity="top"/>
+            android:gravity="bottom"
+            android:text="@string/string_placeholder" />
 
 
     </LinearLayout>
 
     <ImageView
         android:id="@+id/news_thumbnail"
-        android:layout_height="@dimen/list_item_height"
-        android:layout_width="@dimen/list_item_height"/>
+        android:layout_width="@dimen/list_item_height"
+        android:layout_height="@dimen/list_item_height" />
 
 </LinearLayout>

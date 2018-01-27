@@ -1,15 +1,20 @@
 package com.example.android.newsapp;
 
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -29,7 +34,7 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
      * URL for data data from the USGS dataset
      */
     private static final String REQUEST_URL =
-            "http://content.guardianapis.com/search?section=world&show-fields=thumbnail%2Cheadline&api-key=81765130-7eed-41a9-956c-57d4fcb5147b";
+            "http://content.guardianapis.com/search?section=world&show-fields=thumbnail%2Cheadline";
 
     /**
      * Constant value for the loader ID. We can choose any integer.
@@ -62,6 +67,9 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.news_activity, container, false);
+
+        //identifies that a menu option exists
+        setHasOptionsMenu(true);
 
         ListView newsListView = rootView.findViewById(R.id.list);
         mEmptyStateTextView = rootView.findViewById(R.id.empty_view);
@@ -125,7 +133,26 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
 
     @Override
     public Loader<List<News>> onCreateLoader(int i, Bundle bundle){
-        return new NewsLoader (getActivity(), REQUEST_URL);
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String pageSize = sharedPrefs.getString(
+                getString(R.string.settings_page_size_key),
+                getString(R.string.settings_page_size_default));
+
+
+
+        String orderBy = sharedPrefs.getString(
+                getString(R.string.settings_order_by_key),
+                getString(R.string.settings_order_by_default));
+
+        Uri baseUri = Uri.parse(REQUEST_URL);
+        Uri.Builder uriBuilder = baseUri.buildUpon();
+
+        uriBuilder.appendQueryParameter("page-size", pageSize);
+        uriBuilder.appendQueryParameter("orderby", orderBy);
+        uriBuilder.appendQueryParameter("api-key", "81765130-7eed-41a9-956c-57d4fcb5147b");
+
+
+        return new NewsLoader (getActivity(), uriBuilder.toString());
     }
 
     @Override
@@ -149,6 +176,24 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
     public void onLoaderReset(Loader<List<News>> loader) {
         // Loader reset, so we can clear out our existing data.
         mAdapter.clear();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        inflater.inflate(R.menu.main, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id= item.getItemId();
+        if (id == R.id.action_settings){
+            Intent settingsIntent = new Intent(getActivity(), SettingsActivity.class);
+            startActivity(settingsIntent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

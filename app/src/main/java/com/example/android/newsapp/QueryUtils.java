@@ -177,8 +177,12 @@ public final class QueryUtils {
                 if (currentNewsData.has("fields")){
                     //create Json Object
                     JSONObject fields = currentNewsData.getJSONObject("fields");
-                    headline = fields.getString("headline");
-                    imgUrl = fields.getString("thumbnail");
+                    if (fields.has("headline")) {
+                        headline = fields.getString("headline");
+                    }
+                    if (fields.has("thumbnail")) {
+                        imgUrl = fields.getString("thumbnail");
+                    }
                 }
 
 
