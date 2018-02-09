@@ -30,6 +30,12 @@ public final class QueryUtils {
      */
     private static final String LOG_TAG = QueryUtils.class.getSimpleName();
 
+    private static final int READ_TIMEOUT = 10000;
+
+    private static final int CONNECT_TIMEOUT = 15000;
+
+    private static final int RESPONSE_CODE_OK = 200;
+
     /**
      * Create a private constructor because no one should ever create a {@link QueryUtils} object.
      * This class is only meant to hold static variables and methods, which can be accessed
@@ -89,13 +95,13 @@ public final class QueryUtils {
         InputStream inputStream = null;
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setReadTimeout(10000 /* millisecnds */);
-            urlConnection.setConnectTimeout(15000 /*milliseconds */);
+            urlConnection.setReadTimeout(READ_TIMEOUT /* millisecnds */);
+            urlConnection.setConnectTimeout(CONNECT_TIMEOUT /*milliseconds */);
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
             // If the request was successful (response code 200),
             // then read the input stream and parse the response.
-            if (urlConnection.getResponseCode() == 200) {
+            if (urlConnection.getResponseCode() == RESPONSE_CODE_OK) {
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);
             } else {
@@ -173,8 +179,10 @@ public final class QueryUtils {
 
                 String headline = "";
                 String imgUrl = "";
+                String authorName = "";
 
-                if (currentNewsData.has("fields")){
+
+                if (currentNewsData.has("fields")) {
                     //create Json Object
                     JSONObject fields = currentNewsData.getJSONObject("fields");
                     if (fields.has("headline")) {
@@ -186,8 +194,27 @@ public final class QueryUtils {
                 }
 
 
+                if (currentNewsData.has("tags")){
+                    JSONArray tagsArray = currentNewsData.getJSONArray("tags");
+
+                    String[] authors = new String[tagsArray.length()];
+
+
+
+                    for(int j= 0; j< tagsArray.length(); j++) {
+                        JSONObject currentTag = tagsArray.getJSONObject(j);
+
+                        authors[j] = currentTag.getString("webTitle");
+
+                        authorName +=  authors[j] + " , ";
+
+
+                    }
+                }
+
+
                 // Create a new Book object
-                News newsData = new News(webUrl, headline, imgUrl);
+                News newsData = new News(webUrl, headline, imgUrl, authorName);
 
                 // Add the new book to array list
                 newsList.add(newsData);

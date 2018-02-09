@@ -20,24 +20,31 @@ public class News {
 
     private String mImageUrl;
 
+    private String mAuthorName;
+
     //Constructor
-    public News(String url, String headLine, String imgUrl){
+    public News(String url, String headLine, String imgUrl, String authorName) {
         mUrl = url;
         mHeadLine = headLine;
         mImageUrl = imgUrl;
+        mAuthorName = authorName;
     }
 
     //Getter Methods
-    public String getUrl(){
+    public String getUrl() {
         return mUrl;
     }
 
-    public String getHeadLine(){
+    public String getHeadLine() {
         return mHeadLine;
     }
 
-    public String getImageUrl(){
+    public String getImageUrl() {
         return mImageUrl;
+    }
+
+    public String getAuthorName() {
+        return mAuthorName;
     }
 
 }

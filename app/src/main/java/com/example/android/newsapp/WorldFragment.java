@@ -31,10 +31,10 @@ import java.util.List;
 public class WorldFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<News>> {
 
     /**
-     * URL for data data from the USGS dataset
+     * URL for data from Guardian API
      */
     private static final String REQUEST_URL =
-            "http://content.guardianapis.com/search?section=world&show-fields=thumbnail%2Cheadline";
+            "http://content.guardianapis.com/search?section=world&show-fields=thumbnail%2Cheadline&show-tags=contributor";
 
     /**
      * Constant value for the loader ID. We can choose any integer.
@@ -46,10 +46,14 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
     private NewsAdapter mAdapter;
 
     private View rootView;
-    /**TextView that is Displayed when the list is empty*/
+    /**
+     * TextView that is Displayed when the list is empty
+     */
     private TextView mEmptyStateTextView;
 
-    /** more tabs stuff */
+    /**
+     * more tabs stuff
+     */
     public static BusinessFragment newInstance() {
         Bundle args = new Bundle();
 
@@ -57,12 +61,16 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
         fragment.setArguments(args);
         return fragment;
     }
-    /** needed for tabs?! */
+
+    /**
+     * needed for tabs?!
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -75,7 +83,7 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
         mEmptyStateTextView = rootView.findViewById(R.id.empty_view);
 
         //Creat a new adapter that takes an empty list of news items
-        mAdapter = new NewsAdapter(getActivity() , new ArrayList<News>());
+        mAdapter = new NewsAdapter(getActivity(), new ArrayList<News>());
 
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
@@ -88,14 +96,14 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
         //IF there is network connection then fetch data
-        if(networkInfo != null && networkInfo.isConnected()){
+        if (networkInfo != null && networkInfo.isConnected()) {
             // Get a reference to the LoaderManager, in order to interact with loaders.
             LoaderManager loaderManager = getLoaderManager();
 
             // Initialize the loader. Pass in the int ID constant defined above and pass in null for
             // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
             // because this activity implements the LoaderCallbacks interface).
-            loaderManager.initLoader(NEWS_LOADER_ID, null,this);
+            loaderManager.initLoader(NEWS_LOADER_ID, null, this);
 
 
             // Set an item click listener on the ListView, which sends an intent to a web browser
@@ -116,7 +124,7 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
                     startActivity(websiteIntent);
                 }
             });
-        }else{
+        } else {
             // Otherwise, display error
             // First, hide loading indicator so error message will be visible
             View loadingIndicator = rootView.findViewById(R.id.loading_spinner);
@@ -132,18 +140,19 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     @Override
-    public Loader<List<News>> onCreateLoader(int i, Bundle bundle){
+    public Loader<List<News>> onCreateLoader(int i, Bundle bundle) {
+        //Get Preference and use them to query
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String pageSize = sharedPrefs.getString(
                 getString(R.string.settings_page_size_key),
                 getString(R.string.settings_page_size_default));
 
 
-
         String orderBy = sharedPrefs.getString(
                 getString(R.string.settings_order_by_key),
                 getString(R.string.settings_order_by_default));
 
+        //Construct new URL
         Uri baseUri = Uri.parse(REQUEST_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
@@ -152,11 +161,11 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
         uriBuilder.appendQueryParameter("api-key", "81765130-7eed-41a9-956c-57d4fcb5147b");
 
 
-        return new NewsLoader (getActivity(), uriBuilder.toString());
+        return new NewsLoader(getActivity(), uriBuilder.toString());
     }
 
     @Override
-    public void onLoadFinished(Loader<List<News>> loader, List<News> newsData){
+    public void onLoadFinished(Loader<List<News>> loader, List<News> newsData) {
         // Hide loading indicator because the data has been loaded
         View loadingIndicator = rootView.findViewById(R.id.loading_spinner);
         loadingIndicator.setVisibility(View.GONE);
@@ -167,7 +176,7 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
         // Clear the adapter of previous  data
         mAdapter.clear();
 
-        if(newsData != null && !newsData.isEmpty()){
+        if (newsData != null && !newsData.isEmpty()) {
             mAdapter.addAll(newsData);
         }
     }
@@ -179,16 +188,17 @@ public class WorldFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        //add menu to screen
         inflater.inflate(R.menu.main, menu);
-        super.onCreateOptionsMenu(menu,inflater);
-        setHasOptionsMenu(true);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        int id= item.getItemId();
-        if (id == R.id.action_settings){
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // launch Settings activity when Icon is clickedd
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
             Intent settingsIntent = new Intent(getActivity(), SettingsActivity.class);
             startActivity(settingsIntent);
             return true;

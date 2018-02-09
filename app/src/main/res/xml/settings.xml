@@ -3,18 +3,17 @@
     android:title="@string/settings">
 
     <ListPreference
-    android:defaultValue="@string/settings_order_by_default"
-    android:entries="@array/settings_order_by_labels"
-    android:entryValues="@array/settings_order_by_values"
-    android:key="@string/settings_order_by_key"
-    android:title="@string/settings_order_by_label"/>
-
+        android:defaultValue="@string/settings_order_by_default"
+        android:entries="@array/settings_order_by_labels"
+        android:entryValues="@array/settings_order_by_values"
+        android:key="@string/settings_order_by_key"
+        android:title="@string/settings_order_by_label" />
 
 
     <EditTextPreference
         android:defaultValue="@string/settings_page_size_default"
         android:inputType="number"
-        android:title="@string/settings_page_size_label"
-        android:key="@string/settings_page_size_key"/>
+        android:key="@string/settings_page_size_key"
+        android:title="@string/settings_page_size_label" />
 
 </PreferenceScreen>

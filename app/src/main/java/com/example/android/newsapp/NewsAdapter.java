@@ -1,10 +1,6 @@
 package com.example.android.newsapp;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.InputStream;
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 /**
@@ -22,13 +19,16 @@ import java.util.List;
 public class NewsAdapter extends ArrayAdapter<News> {
 
     ImageView bmImage;
+    Context context;
+
     public NewsAdapter(Context context, List<News> news) {
-        super(context,0, news);
+        super(context, 0, news);
+        this.context = context;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent){
-        if (convertView == null){
+    public View getView(int position, View convertView, ViewGroup parent) {
+        if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
         }
 
@@ -39,45 +39,26 @@ public class NewsAdapter extends ArrayAdapter<News> {
         //set Text
         headlineText.setText(currentNewsData.getHeadLine());
 
-        TextView linkText = convertView.findViewById(R.id.link_to_news_page);
-
-        String url = currentNewsData.getUrl();
-
-        //set Text
-        linkText.setText(R.string.read_more);
-
-
-        new DownloadImageTask().execute(currentNewsData.getImageUrl());
+        TextView authorText = convertView.findViewById(R.id.author_name);
+        authorText.setText(currentNewsData.getAuthorName());
 
         bmImage = convertView.findViewById(R.id.news_thumbnail);
+        if (currentNewsData.getImageUrl().isEmpty()) {
 
+            bmImage.setImageResource(R.drawable.placeholder);
+
+        } else {
+
+
+            Picasso.with(context)
+                    .load(currentNewsData.getImageUrl())
+                    .placeholder(R.drawable.placeholder)   // optional
+                    .error(R.drawable.error)      // optional
+                    .into(bmImage);
+
+        }
         //return view
         return convertView;
-    }
-
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-
-
-        public DownloadImageTask() {
-
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
     }
 
 

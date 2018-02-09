@@ -19,15 +19,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         welcomeLayout = findViewById(R.id.welcome_layout);
-        backgroundAnimation =(AnimationDrawable) welcomeLayout.getBackground();
+        backgroundAnimation = (AnimationDrawable) welcomeLayout.getBackground();
 
         backgroundAnimation.setEnterFadeDuration(6000);
         backgroundAnimation.setExitFadeDuration(3000);
 
         continueTextView = (TextView) findViewById(R.id.continue_text);
 
-        continueTextView.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View view){
+        continueTextView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
                 Intent newsIntent = new Intent(MainActivity.this, NewsActivity.class);
                 startActivity(newsIntent);
             }
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
 
         super.onResume();
         backgroundAnimation.start();

@@ -7,6 +7,7 @@
     <color name="colorPrimaryLight">#484848</color>
     <color name="colorAccent">#a4a4a4</color>
 
+    <!-- colors for gradient login in page-->
     <color name="purple_500">#9C27B0</color>
     <color name="deep_purple_500">#673AB7</color>
     <color name="indigo_500">#3F51B5</color>
